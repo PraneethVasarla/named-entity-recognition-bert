@@ -20,7 +20,7 @@ class EntityDataset:
         target_pos = []
         target_tags = []
 
-        for i,s in enumerate(self.text):
+        for i,s in enumerate(text):
             inputs = config.TOKENIZER.encode(
                 s,
                 add_special_tokens = False
@@ -33,7 +33,7 @@ class EntityDataset:
 
             ids = ids[:config.MAX_LEN - 2]
             target_pos = target_pos[:config.MAX_LEN - 2]
-            target_pos = target_pos[:config.MAX_LEN - 2]
+            target_tags = target_tags[:config.MAX_LEN - 2]
 
             ids = [101] + ids + [102]
             target_pos = [0] + target_pos + [0]
