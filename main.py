@@ -1,7 +1,10 @@
 from dataset import NERDataset
+from src import CustomNERModel
 
 dataset = NERDataset(dataset_path="dataset/ner_dataset.csv")
 
-hf = dataset.prepare_hf_dataset()
+model_checkpoint = "bert-base-uncased"
 
-print(hf)
+model_trainer = CustomNERModel(dataset=dataset,model_checkpoint=model_checkpoint)
+
+model_trainer.train()

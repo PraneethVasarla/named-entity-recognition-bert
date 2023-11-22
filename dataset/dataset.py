@@ -13,14 +13,22 @@ class NERDataset:
     def __init__(self,dataset_path=None) -> None:
         if dataset_path is not None:
             df = pd.read_csv("dataset/ner_dataset.csv",encoding="unicode_escape")
-            self.df = df
+            self.df = df[:1000]
+            self.label_names = None
         else:
             raise Exception("Pass dataset path")
         
     def prepare_hf_dataset(self):
         df = self.df.copy()
 
+        self.label_names = list(df['Tag'].unique())
+        self.label2id = {value:key for key,value in enumerate(list(df['Tag'].unique()))}
+        self.id2label = {self.label2id[key]:key for key in self.label2id}
+
         df['Sentence #'].ffill(inplace=True)
+
+        df['Tag'] = df.Tag.map(self.label2id)
+        
         df['sentence'] = df.groupby(['Sentence #'])['Word'].transform(lambda x: ' '.join(str(word) for word in x))
         df['tokens'] = df['sentence'].apply(lambda x: x.split())
         df.drop("sentence",axis=1,inplace=True)
@@ -53,5 +61,3 @@ class NERDataset:
         dataset['test'] = test_dataset
 
         self.hf_dataset = dataset
-
-        return self.hf_dataset
