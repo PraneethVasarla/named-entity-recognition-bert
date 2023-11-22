@@ -10,10 +10,15 @@ def keep_first_row(group):
     return group.iloc[0]
 
 class NERDataset:
-    def __init__(self,dataset_path=None) -> None:
+    def __init__(self,dataset_path=None,all_rows=False) -> None:
         if dataset_path is not None:
             df = pd.read_csv("dataset/ner_dataset.csv",encoding="unicode_escape")
-            self.df = df[:1000]
+
+            if all_rows:
+                self.df = df
+            else:
+                self.df = df[:1000]
+
             self.label_names = None
         else:
             raise Exception("Pass dataset path")
